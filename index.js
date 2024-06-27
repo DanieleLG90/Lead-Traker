@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
     databaseURL : "https://scrimba-lead-traker-app-default-rtdb.europe-west1.firebasedatabase.app/"
@@ -7,6 +7,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
+const referenceInDB = ref(database, "leads")
 
 
 const inputEl = document.getElementById("input-el")
@@ -30,11 +31,15 @@ function render(leads) {
     ulEl.innerHTML = listItems
 }
 
+onValue(referenceInDB, function(snapshot) {
+    console.log(snapshot.val())
+})
+
 deleteBtn.addEventListener("dblclick", function() {
     
 })
 
 inputBtn.addEventListener("click", function() {
-    console.log(inputEl.value)
+    push(referenceInDB, inputEl.value)
     inputEl.value = ""
 })
